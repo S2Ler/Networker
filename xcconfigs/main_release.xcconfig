@@ -1,0 +1,3 @@
+/// Use for all targets in release
+
+#include "main_shared.xcconfig"
