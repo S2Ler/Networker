@@ -8,8 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		09640E6622817B30005649F3 /* Networker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09640E5C22817B30005649F3 /* Networker.framework */; };
-		09640E6B22817B30005649F3 /* NetworkerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09640E6A22817B30005649F3 /* NetworkerTests.swift */; };
-		09640E7522817C24005649F3 /* ApiRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09640E7422817C24005649F3 /* ApiRequest.swift */; };
+		09640E6B22817B30005649F3 /* PathTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09640E6A22817B30005649F3 /* PathTests.swift */; };
+		09640E7522817C24005649F3 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09640E7422817C24005649F3 /* Request.swift */; };
+		09640E782281A8B0005649F3 /* RawRequestValueConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09640E772281A8B0005649F3 /* RawRequestValueConvertible.swift */; };
+		09640E7A2281A8FF005649F3 /* HttpMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09640E792281A8FF005649F3 /* HttpMethod.swift */; };
+		09640E7C2281AD3A005649F3 /* Request.Body.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09640E7B2281AD3A005649F3 /* Request.Body.swift */; };
+		09640E7E2281AE5C005649F3 /* Request.Path.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09640E7D2281AE5C005649F3 /* Request.Path.swift */; };
+		09640E822281CE8A005649F3 /* Dispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09640E812281CE8A005649F3 /* Dispatcher.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,9 +36,14 @@
 		09640E5C22817B30005649F3 /* Networker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Networker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		09640E6022817B30005649F3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		09640E6522817B30005649F3 /* NetworkerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NetworkerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		09640E6A22817B30005649F3 /* NetworkerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkerTests.swift; sourceTree = "<group>"; };
+		09640E6A22817B30005649F3 /* PathTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathTests.swift; sourceTree = "<group>"; };
 		09640E6C22817B30005649F3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		09640E7422817C24005649F3 /* ApiRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiRequest.swift; sourceTree = "<group>"; };
+		09640E7422817C24005649F3 /* Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Request.swift; sourceTree = "<group>"; };
+		09640E772281A8B0005649F3 /* RawRequestValueConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawRequestValueConvertible.swift; sourceTree = "<group>"; };
+		09640E792281A8FF005649F3 /* HttpMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpMethod.swift; sourceTree = "<group>"; };
+		09640E7B2281AD3A005649F3 /* Request.Body.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Request.Body.swift; sourceTree = "<group>"; };
+		09640E7D2281AE5C005649F3 /* Request.Path.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Request.Path.swift; sourceTree = "<group>"; };
+		09640E812281CE8A005649F3 /* Dispatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dispatcher.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,8 +99,13 @@
 		09640E5E22817B30005649F3 /* Networker */ = {
 			isa = PBXGroup;
 			children = (
+				09640E7422817C24005649F3 /* Request.swift */,
+				09640E772281A8B0005649F3 /* RawRequestValueConvertible.swift */,
+				09640E792281A8FF005649F3 /* HttpMethod.swift */,
+				09640E7B2281AD3A005649F3 /* Request.Body.swift */,
+				09640E7D2281AE5C005649F3 /* Request.Path.swift */,
+				09640E812281CE8A005649F3 /* Dispatcher.swift */,
 				09640E6022817B30005649F3 /* Info.plist */,
-				09640E7422817C24005649F3 /* ApiRequest.swift */,
 			);
 			path = Networker;
 			sourceTree = "<group>";
@@ -98,7 +113,7 @@
 		09640E6922817B30005649F3 /* NetworkerTests */ = {
 			isa = PBXGroup;
 			children = (
-				09640E6A22817B30005649F3 /* NetworkerTests.swift */,
+				09640E6A22817B30005649F3 /* PathTests.swift */,
 				09640E6C22817B30005649F3 /* Info.plist */,
 			);
 			path = NetworkerTests;
@@ -121,6 +136,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 09640E6E22817B30005649F3 /* Build configuration list for PBXNativeTarget "Networker" */;
 			buildPhases = (
+				09640E7F2281B3F5005649F3 /* Format */,
 				09640E5722817B30005649F3 /* Headers */,
 				09640E5822817B30005649F3 /* Sources */,
 				09640E5922817B30005649F3 /* Frameworks */,
@@ -139,6 +155,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 09640E7122817B30005649F3 /* Build configuration list for PBXNativeTarget "NetworkerTests" */;
 			buildPhases = (
+				09640E802281B414005649F3 /* Format */,
 				09640E6122817B30005649F3 /* Sources */,
 				09640E6222817B30005649F3 /* Frameworks */,
 				09640E6322817B30005649F3 /* Resources */,
@@ -206,12 +223,56 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		09640E7F2281B3F5005649F3 /* Format */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = Format;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "PATH=$PATH:/usr/local/bin\nif which swiftformat >/dev/null; then\nswiftformat Networker\nelse\necho \"warning: SwiftFormat not installed, download from https://github.com/nicklockwood/SwiftFormat\"\nfi\n";
+		};
+		09640E802281B414005649F3 /* Format */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = Format;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "PATH=$PATH:/usr/local/bin\nif which swiftformat >/dev/null; then\nswiftformat NetworkerTests\nelse\necho \"warning: SwiftFormat not installed, download from https://github.com/nicklockwood/SwiftFormat\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		09640E5822817B30005649F3 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				09640E7522817C24005649F3 /* ApiRequest.swift in Sources */,
+				09640E782281A8B0005649F3 /* RawRequestValueConvertible.swift in Sources */,
+				09640E7A2281A8FF005649F3 /* HttpMethod.swift in Sources */,
+				09640E822281CE8A005649F3 /* Dispatcher.swift in Sources */,
+				09640E7C2281AD3A005649F3 /* Request.Body.swift in Sources */,
+				09640E7522817C24005649F3 /* Request.swift in Sources */,
+				09640E7E2281AE5C005649F3 /* Request.Path.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -219,7 +280,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				09640E6B22817B30005649F3 /* NetworkerTests.swift in Sources */,
+				09640E6B22817B30005649F3 /* PathTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
