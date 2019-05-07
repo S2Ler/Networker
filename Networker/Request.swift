@@ -6,10 +6,10 @@ public protocol ResponseDecoder {
 }
 
 public struct Request<Success: Decodable, Decoder: ResponseDecoder> {
-  public var path: Path
+  public var path: RequestPath
   public var urlParams: [String: RawRequestValueConvertible]?
   public var httpMethod: HttpMethod
-  public var body: Body?
+  public var body: RequestBody?
   public var headers: [String: RawRequestValueConvertible]?
 
   public static func convert(decoder: Decoder,

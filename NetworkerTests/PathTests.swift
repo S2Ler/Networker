@@ -7,12 +7,12 @@ class PathTests: XCTestCase {
   }
 
   func testExpressibleByStringLiteral() {
-    let path: Request.Path = "/api/integrations"
+    let path: RequestPath = "/api/integrations"
     XCTAssertEqual(path.raw, "/api/integrations")
   }
 
   func testExpressibleByStringLiteralIgnoresParameters() {
-    let path: Request.Path = "/api/integrations/{id}"
+    let path: RequestPath = "/api/integrations/{id}"
     XCTAssertEqual(path.raw, "/api/integrations/{id}")
   }
 
@@ -25,7 +25,7 @@ class PathTests: XCTestCase {
 
 extension PathTests {
   func test(_ pattern: String, parameters: [String: RawRequestValueConvertible]? = nil, expected: String) {
-    let path = Request.Path(pattern: pattern, parameters: parameters)
+    let path = RequestPath(pattern: pattern, parameters: parameters)
     XCTAssertEqual(path.raw, expected)
   }
 }
