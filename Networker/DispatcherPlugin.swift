@@ -2,6 +2,7 @@ import Foundation
 
 public protocol DispatcherPlugin {
   func preprocessUrlRequest(_ urlRequest: inout URLRequest)
+
   func didSendRequest<Success, ErrorType>(_ urlRequest: URLRequest, result: Result<Success, ErrorType>)
     where Success: Decodable,
     ErrorType: Swift.Error

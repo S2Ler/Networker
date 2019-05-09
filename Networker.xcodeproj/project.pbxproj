@@ -17,6 +17,8 @@
 		09640E822281CE8A005649F3 /* Dispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09640E812281CE8A005649F3 /* Dispatcher.swift */; };
 		09640E9A2281EA85005649F3 /* RequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09640E992281EA85005649F3 /* RequestTests.swift */; };
 		09640E9C22820752005649F3 /* DispatcherPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09640E9B22820752005649F3 /* DispatcherPlugin.swift */; };
+		09640E9E22822B29005649F3 /* Atomic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09640E9D22822B29005649F3 /* Atomic.swift */; };
+		09640EA022822D08005649F3 /* RWAtomic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09640E9F22822D08005649F3 /* RWAtomic.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +50,8 @@
 		09640E812281CE8A005649F3 /* Dispatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dispatcher.swift; sourceTree = "<group>"; };
 		09640E992281EA85005649F3 /* RequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestTests.swift; sourceTree = "<group>"; };
 		09640E9B22820752005649F3 /* DispatcherPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatcherPlugin.swift; sourceTree = "<group>"; };
+		09640E9D22822B29005649F3 /* Atomic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Atomic.swift; sourceTree = "<group>"; };
+		09640E9F22822D08005649F3 /* RWAtomic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RWAtomic.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,6 +114,8 @@
 				09640E7D2281AE5C005649F3 /* Request.Path.swift */,
 				09640E812281CE8A005649F3 /* Dispatcher.swift */,
 				09640E9B22820752005649F3 /* DispatcherPlugin.swift */,
+				09640E9D22822B29005649F3 /* Atomic.swift */,
+				09640E9F22822D08005649F3 /* RWAtomic.swift */,
 				09640E6022817B30005649F3 /* Info.plist */,
 			);
 			path = Networker;
@@ -277,6 +283,8 @@
 				09640E7A2281A8FF005649F3 /* HttpMethod.swift in Sources */,
 				09640E822281CE8A005649F3 /* Dispatcher.swift in Sources */,
 				09640E7C2281AD3A005649F3 /* Request.Body.swift in Sources */,
+				09640EA022822D08005649F3 /* RWAtomic.swift in Sources */,
+				09640E9E22822B29005649F3 /* Atomic.swift in Sources */,
 				09640E7522817C24005649F3 /* Request.swift in Sources */,
 				09640E9C22820752005649F3 /* DispatcherPlugin.swift in Sources */,
 				09640E7E2281AE5C005649F3 /* Request.Path.swift in Sources */,

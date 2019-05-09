@@ -1,8 +1,10 @@
 import Foundation
 
 public protocol Dispatcher: AnyObject {
-  var plugins: [DispatcherPlugin] { get }
-  func prepareUrlRequest<Success, Decoder>(_ request: Request<Success, Decoder>) throws -> URLRequest
+  var plugins: [DispatcherPlugin] { get set }
+  func add(_ plugin: DispatcherPlugin)
+
+  func prepareUrlRequest<Success, Decoder>(_ request: Request<Success, Decoder>) -> URLRequest
   func sendTransportRequest<Success, Decoder>(_ urlRequest: URLRequest,
                                               requestType: Request<Success, Decoder>.Type,
                                               completionQueue: DispatchQueue,
@@ -12,9 +14,9 @@ public protocol Dispatcher: AnyObject {
 public extension Dispatcher {
   func dispatch<Success, Decoder>(_ request: Request<Success, Decoder>,
                                   completionQueue: DispatchQueue,
-                                  completion: @escaping (Result<Success, Decoder.ErrorType>) -> Void) throws
+                                  completion: @escaping (Result<Success, Decoder.ErrorType>) -> Void)
     where Success: Decodable, Decoder: ResponseDecoder {
-    var transportRequest = try prepareUrlRequest(request)
+    var transportRequest = prepareUrlRequest(request)
 
     plugins.forEach {
       $0.preprocessRequest(&transportRequest)
@@ -33,11 +35,34 @@ public extension Dispatcher {
   }
 }
 
-public class URLSessionDispatcher: Dispatcher {
-  public private(set) var plugins: [DispatcherPlugin] = []
+public class URLSessionDispatcher {
+  public var plugins: [DispatcherPlugin] {
+    get {
+      return rwAtomicPlugins.value
+    }
+    set {
+      rwAtomicPlugins.mutate { value in
+        value = newValue
+      }
+    }
+  }
 
-  public func prepareUrlRequest<Success, Decoder>(_ request: Request<Success, Decoder>) throws -> URLRequest {
-    let urlRequest = URLRequest(url: try request.url().get(),
+  public func add(_ plugin: DispatcherPlugin) {
+    rwAtomicPlugins.mutate { value in
+      value.append(plugin)
+    }
+  }
+
+  private var rwAtomicPlugins: RWAtomic<[DispatcherPlugin]>
+
+  public init(plugins: [DispatcherPlugin]) {
+    rwAtomicPlugins = RWAtomic(plugins)
+  }
+}
+
+extension URLSessionDispatcher: Dispatcher {
+  public func prepareUrlRequest<Success, Decoder>(_ request: Request<Success, Decoder>) -> URLRequest {
+    let urlRequest = URLRequest(url: request.url,
                                 cachePolicy: request.cachePolicy,
                                 timeoutInterval: request.timeout)
     return urlRequest

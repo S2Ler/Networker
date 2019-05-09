@@ -21,11 +21,26 @@ class PathTests: XCTestCase {
     test("/api/bot/{id}", parameters: ["invalid_id": "123"], expected: "/api/bot/{id}")
     test("/api/bot/{}", parameters: ["id": "123"], expected: "/api/bot/{}")
   }
+
+  func testThrowingPatternWithoutLeadingSlash() {
+    testThrowing("api/bot/{id}", parameters: ["id": "123"], expectedError: RequestPath.Error.patternWithoutLeadingSlash)
+  }
 }
 
 extension PathTests {
-  func test(_ pattern: String, parameters: [String: RawRequestValueConvertible]? = nil, expected: String) {
+  func test(_ pattern: StaticString, parameters: [String: RawRequestValueConvertible]? = nil, expected: String) {
     let path = RequestPath(pattern: pattern, parameters: parameters)
     XCTAssertEqual(path.raw, expected)
+  }
+
+  func testThrowing(_ pattern: StaticString, parameters: [String: RawRequestValueConvertible]? = nil, expectedError: RequestPath.Error) {
+    do {
+      _ = try RequestPath(dynamicPattern: pattern.description, parameters: parameters)
+      XCTFail()
+    } catch let error as RequestPath.Error {
+      XCTAssertEqual(expectedError, error)
+    } catch {
+      XCTFail("Unexpected error: \(error)")
+    }
   }
 }

@@ -23,16 +23,9 @@ public struct Request<Success: Decodable, Decoder: ResponseDecoder> {
 }
 
 public extension Request {
-  enum URLError: Swift.Error {
-    case invalidUrl(baseUrl: URL, RequestPath)
-  }
-
   /// - throws: URLError.badURL
-  func url() -> Result<URL, URLError> {
-    guard var urlComponents = URLComponents(url: baseUrl.appendingPathComponent(path.raw),
-                                            resolvingAgainstBaseURL: false) else {
-      return .failure(.invalidUrl(baseUrl: baseUrl, path))
-    }
+  var url: URL {
+    var urlComponents = path.combine(withBaseUrl: baseUrl)
 
     urlComponents.queryItems = urlParams?.map { (args) -> URLQueryItem in
       let (key, value) = args
@@ -40,9 +33,9 @@ public extension Request {
     }
 
     guard let url = urlComponents.url else {
-      return .failure(.invalidUrl(baseUrl: baseUrl, path))
+      preconditionFailure("Can't construct url from: \(urlComponents)")
     }
 
-    return .success(url)
+    return url
   }
 }
