@@ -39,6 +39,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		092DB57722842294004DD5F1 /* .swiftformat */ = {isa = PBXFileReference; lastKnownFileType = text; path = .swiftformat; sourceTree = "<group>"; };
 		0960B10522841C5300CEA0C1 /* InjectHeaderPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InjectHeaderPlugin.swift; sourceTree = "<group>"; };
 		0960B10722841C8000CEA0C1 /* BasicAuthPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicAuthPlugin.swift; sourceTree = "<group>"; };
 		0960B10922841F0100CEA0C1 /* PluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PluginTests.swift; sourceTree = "<group>"; };
@@ -109,6 +110,7 @@
 		09640E4A22817A1E005649F3 = {
 			isa = PBXGroup;
 			children = (
+				092DB57722842294004DD5F1 /* .swiftformat */,
 				09640E5122817AB6005649F3 /* xcconfigs */,
 				09640E5E22817B30005649F3 /* Networker */,
 				09640E6922817B30005649F3 /* NetworkerTests */,

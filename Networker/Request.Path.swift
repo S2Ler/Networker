@@ -22,7 +22,8 @@ public struct RequestPath {
 
     do {
       try RequestPath.validateInputs(pattern: pattern, parameters: parameters)
-    } catch {
+    }
+    catch {
       preconditionFailure("Invalid path. Error: \(error)")
     }
 
@@ -82,27 +83,33 @@ public struct RequestPath {
           if !id.isEmpty {
             if let value = parameters[id] {
               raw.append(value.rawRequestValue)
-            } else {
+            }
+            else {
               raw.append("{\(id)}")
             }
-          } else {
+          }
+          else {
             raw.append("{}")
           }
           opened = false
           id = ""
-        } else if c == "{" {
+        }
+        else if c == "{" {
           opened = true
           id = ""
-        } else {
+        }
+        else {
           if opened {
             id.append(c)
-          } else {
+          }
+          else {
             raw.append(c)
           }
         }
       }
       return raw
-    } else {
+    }
+    else {
       return pattern
     }
   }
