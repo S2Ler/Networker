@@ -116,7 +116,9 @@
 				09640E6922817B30005649F3 /* NetworkerTests */,
 				09640E5D22817B30005649F3 /* Products */,
 			);
+			indentWidth = 2;
 			sourceTree = "<group>";
+			tabWidth = 2;
 		};
 		09640E5122817AB6005649F3 /* xcconfigs */ = {
 			isa = PBXGroup;
