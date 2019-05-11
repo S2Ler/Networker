@@ -19,8 +19,8 @@
 		09640E7522817C24005649F3 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09640E7422817C24005649F3 /* Request.swift */; };
 		09640E782281A8B0005649F3 /* RawRequestValueConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09640E772281A8B0005649F3 /* RawRequestValueConvertible.swift */; };
 		09640E7A2281A8FF005649F3 /* HttpMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09640E792281A8FF005649F3 /* HttpMethod.swift */; };
-		09640E7C2281AD3A005649F3 /* Request.Body.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09640E7B2281AD3A005649F3 /* Request.Body.swift */; };
-		09640E7E2281AE5C005649F3 /* Request.Path.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09640E7D2281AE5C005649F3 /* Request.Path.swift */; };
+		09640E7C2281AD3A005649F3 /* RequestBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09640E7B2281AD3A005649F3 /* RequestBody.swift */; };
+		09640E7E2281AE5C005649F3 /* RequestPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09640E7D2281AE5C005649F3 /* RequestPath.swift */; };
 		09640E822281CE8A005649F3 /* Dispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09640E812281CE8A005649F3 /* Dispatcher.swift */; };
 		09640E9A2281EA85005649F3 /* RequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09640E992281EA85005649F3 /* RequestTests.swift */; };
 		09640E9C22820752005649F3 /* DispatcherPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09640E9B22820752005649F3 /* DispatcherPlugin.swift */; };
@@ -60,8 +60,8 @@
 		09640E7422817C24005649F3 /* Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Request.swift; sourceTree = "<group>"; };
 		09640E772281A8B0005649F3 /* RawRequestValueConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawRequestValueConvertible.swift; sourceTree = "<group>"; };
 		09640E792281A8FF005649F3 /* HttpMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpMethod.swift; sourceTree = "<group>"; };
-		09640E7B2281AD3A005649F3 /* Request.Body.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Request.Body.swift; sourceTree = "<group>"; };
-		09640E7D2281AE5C005649F3 /* Request.Path.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Request.Path.swift; sourceTree = "<group>"; };
+		09640E7B2281AD3A005649F3 /* RequestBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestBody.swift; sourceTree = "<group>"; };
+		09640E7D2281AE5C005649F3 /* RequestPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestPath.swift; sourceTree = "<group>"; };
 		09640E812281CE8A005649F3 /* Dispatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dispatcher.swift; sourceTree = "<group>"; };
 		09640E992281EA85005649F3 /* RequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestTests.swift; sourceTree = "<group>"; };
 		09640E9B22820752005649F3 /* DispatcherPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatcherPlugin.swift; sourceTree = "<group>"; };
@@ -148,8 +148,8 @@
 				09640E7422817C24005649F3 /* Request.swift */,
 				09640E772281A8B0005649F3 /* RawRequestValueConvertible.swift */,
 				09640E792281A8FF005649F3 /* HttpMethod.swift */,
-				09640E7B2281AD3A005649F3 /* Request.Body.swift */,
-				09640E7D2281AE5C005649F3 /* Request.Path.swift */,
+				09640E7B2281AD3A005649F3 /* RequestBody.swift */,
+				09640E7D2281AE5C005649F3 /* RequestPath.swift */,
 				09640E812281CE8A005649F3 /* Dispatcher.swift */,
 				09640E9B22820752005649F3 /* DispatcherPlugin.swift */,
 				0960B1102284203C00CEA0C1 /* URLSessionDispatcher.swift */,
@@ -325,12 +325,12 @@
 				09640E782281A8B0005649F3 /* RawRequestValueConvertible.swift in Sources */,
 				09640E7A2281A8FF005649F3 /* HttpMethod.swift in Sources */,
 				09640E822281CE8A005649F3 /* Dispatcher.swift in Sources */,
-				09640E7C2281AD3A005649F3 /* Request.Body.swift in Sources */,
+				09640E7C2281AD3A005649F3 /* RequestBody.swift in Sources */,
 				09640EA022822D08005649F3 /* RWAtomic.swift in Sources */,
 				09640E9E22822B29005649F3 /* Atomic.swift in Sources */,
 				09640E7522817C24005649F3 /* Request.swift in Sources */,
 				09640E9C22820752005649F3 /* DispatcherPlugin.swift in Sources */,
-				09640E7E2281AE5C005649F3 /* Request.Path.swift in Sources */,
+				09640E7E2281AE5C005649F3 /* RequestPath.swift in Sources */,
 				0960B1112284203C00CEA0C1 /* URLSessionDispatcher.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
