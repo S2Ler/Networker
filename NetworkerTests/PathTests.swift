@@ -37,9 +37,11 @@ extension PathTests {
     do {
       _ = try RequestPath(dynamicPattern: pattern.description, parameters: parameters)
       XCTFail()
-    } catch let error as RequestPath.Error {
+    }
+    catch let error as RequestPath.Error {
       XCTAssertEqual(expectedError, error)
-    } catch {
+    }
+    catch {
       XCTFail("Unexpected error: \(error)")
     }
   }

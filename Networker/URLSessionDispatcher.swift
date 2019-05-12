@@ -24,7 +24,7 @@ public class URLSessionDispatcher: NSObject {
 
   public init(plugins: [DispatcherPlugin],
               urlSessionConfiguration: URLSessionConfiguration = .default,
-              urlSessionDelegateQueue: OperationQueue?) {
+              urlSessionDelegateQueue: OperationQueue? = nil) {
     urlSessionInitData = URLSessionInitData(urlSessionConfiguration: urlSessionConfiguration,
                                             delegateQueue: urlSessionDelegateQueue)
     rwAtomicPlugins = RWAtomic(plugins)
