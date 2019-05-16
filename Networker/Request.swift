@@ -13,12 +13,30 @@ public struct Request<Success: Decodable, Decoder: ResponseDecoder> {
   public var body: RequestBody?
   public var headers: [String: RawRequestValueConvertible]?
   public var timeout: TimeInterval = 60
-  public var cachePolicy: URLRequest.CachePolicy = .useProtocolCachePolicy
+  public var cachePolicy: URLRequest.CachePolicy
 
   public static func convert(data: Data?,
                              response: URLResponse?,
                              error: Error?) -> Result<Success, Decoder.ErrorType> {
     return Decoder.decode(Success.self, data: data, response: response, error: error)
+  }
+
+  public init(baseUrl: URL,
+              path: RequestPath,
+              urlParams: [String: RawRequestValueConvertible?]? = nil,
+              httpMethod: HttpMethod,
+              body: RequestBody? = nil,
+              headers: [String: RawRequestValueConvertible]? = nil,
+              timeout: TimeInterval = 60,
+              cachePolicy: URLRequest.CachePolicy = .useProtocolCachePolicy) {
+    self.baseUrl = baseUrl
+    self.path = path
+    self.urlParams = urlParams
+    self.httpMethod = httpMethod
+    self.body = body
+    self.headers = headers
+    self.timeout = timeout
+    self.cachePolicy = cachePolicy
   }
 }
 
