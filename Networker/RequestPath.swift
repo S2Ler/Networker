@@ -60,8 +60,8 @@ public struct RequestPath {
       preconditionFailure("Can't construct URLComponents from baseUrl")
     }
 
-    if components.path.hasPrefix("/") {
-      components.path.removeFirst()
+    if components.path.hasSuffix("/") {
+      components.path.removeLast()
     }
 
     components.path.append(raw)
