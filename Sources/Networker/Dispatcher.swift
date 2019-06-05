@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 
 public protocol Dispatcher: AnyObject {
   var plugins: [DispatcherPlugin] { get set }
@@ -12,25 +13,25 @@ public protocol Dispatcher: AnyObject {
 }
 
 public extension Dispatcher {
-  func dispatch<Success, Decoder>(_ request: Request<Success, Decoder>,
-                                  completionQueue: DispatchQueue,
-                                  completion: @escaping (Result<Success, Decoder.ErrorType>) -> Void)
+  func dispatch<Success, Decoder>(_ request: Request<Success, Decoder>) -> DeferedFuture<Success, Decoder.ErrorType>
     where Success: Decodable, Decoder: ResponseDecoder {
-    var transportRequest = prepareUrlRequest(request)
+      return Publishers.Deferred {
+        return Publishers.Future { (fullfill) in
+          var transportRequest = self.prepareUrlRequest(request)
 
-    plugins.forEach {
-      $0.preprocessUrlRequest(&transportRequest)
-    }
+          self.plugins.forEach {
+            $0.preprocessUrlRequest(&transportRequest)
+          }
 
-    sendTransportRequest(transportRequest,
-                         requestType: type(of: request),
-                         completionQueue: .global()) { [weak self] result in
-      self?.plugins.forEach {
-        $0.didSendRequest(transportRequest, result: result)
+          self.sendTransportRequest(transportRequest,
+                                    requestType: type(of: request),
+                                    completionQueue: .global()) { [weak self] result in
+                                      self?.plugins.forEach {
+                                        $0.didSendRequest(transportRequest, result: result)
+                                      }
+                                      fullfill(result)
+          }
+        }
       }
-      completionQueue.async {
-        completion(result)
-      }
-    }
   }
 }

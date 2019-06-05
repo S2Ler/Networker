@@ -1,5 +1,6 @@
 import Foundation
 import Networker
+import Combine
 
 internal final class MockDispatcher: Dispatcher {
   private let urlSessionDispatcher: URLSessionDispatcher
