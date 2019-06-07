@@ -20,33 +20,20 @@ public class URLSessionDispatcher: NSObject {
     return urlSession
   }()
 
-  private var rwAtomicPlugins: RWAtomic<[DispatcherPlugin]>
+  @RWAtomic public var plugins: [DispatcherPlugin]
 
   public init(plugins: [DispatcherPlugin],
               urlSessionConfiguration: URLSessionConfiguration = .default,
               urlSessionDelegateQueue: OperationQueue? = nil) {
     urlSessionInitData = URLSessionInitData(urlSessionConfiguration: urlSessionConfiguration,
                                             delegateQueue: urlSessionDelegateQueue)
-    rwAtomicPlugins = RWAtomic(plugins)
+    self.plugins = plugins
   }
 }
 
 extension URLSessionDispatcher: Dispatcher {
-  public var plugins: [DispatcherPlugin] {
-    get {
-      return rwAtomicPlugins.value
-    }
-    set {
-      rwAtomicPlugins.mutate { value in
-        value = newValue
-      }
-    }
-  }
-
   public func add(_ plugin: DispatcherPlugin) {
-    rwAtomicPlugins.mutate { value in
-      value.append(plugin)
-    }
+    $plugins.mutate { $0.append(plugin) }
   }
 
   public func prepareUrlRequest<Success, Decoder>(_ request: Request<Success, Decoder>) -> URLRequest {

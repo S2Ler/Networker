@@ -1,13 +1,14 @@
 import Foundation
 
+@propertyWrapper
 public final class RWAtomic<Value> {
   public typealias Value = Value
 
   private var lock: pthread_rwlock_t
   private var _value: Value
 
-  public init(_ value: Value) {
-    _value = value
+  public init(initialValue: Value) {
+    _value = initialValue
     lock = pthread_rwlock_t()
     pthread_rwlock_init(&lock, nil)
   }
@@ -17,10 +18,18 @@ public final class RWAtomic<Value> {
   }
 
   public var value: Value {
-    pthread_rwlock_rdlock(&lock); defer {
-      pthread_rwlock_unlock(&lock)
+    _read {
+      pthread_rwlock_rdlock(&lock); defer {
+        pthread_rwlock_unlock(&lock)
+      }
+      yield _value
     }
-    return _value
+    _modify {
+      pthread_rwlock_rdlock(&lock); defer {
+        pthread_rwlock_unlock(&lock)
+      }
+      yield &_value
+    }
   }
 
   public func mutate(_ transform: (inout Value) -> Void) {

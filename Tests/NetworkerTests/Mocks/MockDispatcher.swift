@@ -5,7 +5,7 @@ import Combine
 internal final class MockDispatcher: Dispatcher {
   private let urlSessionDispatcher: URLSessionDispatcher
   private let finalRequestHandler: (URLRequest) -> Void
-  var plugins: [DispatcherPlugin]
+  @RWAtomic var plugins: [DispatcherPlugin]
 
   internal init(finalRequestHandler: @escaping (URLRequest) -> Void) {
     self.finalRequestHandler = finalRequestHandler
