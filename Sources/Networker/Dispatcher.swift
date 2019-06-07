@@ -13,10 +13,11 @@ public protocol Dispatcher: AnyObject {
 }
 
 public extension Dispatcher {
-  func dispatch<Success, Decoder>(_ request: Request<Success, Decoder>) -> DeferedFuture<Success, Decoder.ErrorType>
+  func dispatch<Success, Decoder>(_ request: Request<Success, Decoder>) -> AnyPublisher<Success, Decoder.ErrorType>
     where Success: Decodable, Decoder: ResponseDecoder {
-      return Publishers.Deferred {
-        return Publishers.Future { (fullfill) in
+      typealias RequestFuture = Publishers.Future<Success, Decoder.ErrorType>
+      return Publishers.Deferred<RequestFuture> {
+        return RequestFuture { (fullfill) in
           var transportRequest = self.prepareUrlRequest(request)
 
           self.plugins.forEach {
@@ -32,6 +33,6 @@ public extension Dispatcher {
                                       fullfill(result)
           }
         }
-      }
+      }.eraseToAnyPublisher()
   }
 }
