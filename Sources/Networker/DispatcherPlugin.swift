@@ -3,7 +3,7 @@ import Foundation
 public protocol DispatcherPlugin {
   func preprocessUrlRequest(_ urlRequest: inout URLRequest)
 
-  /// Return true if challenge will be fullfilled
+  /// Return true if challenge will be fulfilled
   func fullFill(challenge: URLAuthenticationChallenge,
                 completion: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) -> Bool
 

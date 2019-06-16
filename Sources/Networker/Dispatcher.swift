@@ -17,7 +17,7 @@ public extension Dispatcher {
     where Success: Decodable, Decoder: ResponseDecoder {
       typealias RequestFuture = Publishers.Future<Success, Decoder.ErrorType>
       return Publishers.Deferred<RequestFuture> {
-        return RequestFuture { (fullfill) in
+        return RequestFuture { (fulfill) in
           var transportRequest = self.prepareUrlRequest(request)
 
           self.plugins.forEach {
@@ -30,7 +30,7 @@ public extension Dispatcher {
                                       self?.plugins.forEach {
                                         $0.didSendRequest(transportRequest, result: result)
                                       }
-                                      fullfill(result)
+                                      fulfill(result)
           }
         }
       }.eraseToAnyPublisher()
