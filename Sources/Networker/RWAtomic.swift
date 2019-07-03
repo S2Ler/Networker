@@ -18,24 +18,24 @@ public final class RWAtomic<Value> {
   }
 
   public var wrappedValue: Value {
-    _read {
+    get {
       pthread_rwlock_rdlock(&lock); defer {
         pthread_rwlock_unlock(&lock)
       }
-      yield _value
+      return _value
     }
-    _modify {
+    set {
       pthread_rwlock_rdlock(&lock); defer {
         pthread_rwlock_unlock(&lock)
       }
-      yield &_value
+      _value = newValue
     }
   }
 
-  public func mutate(_ transform: (inout Value) -> Void) {
+  public func mutate(_ mutation: (inout Value) throws -> Void) rethrows {
     pthread_rwlock_wrlock(&lock); defer {
       pthread_rwlock_unlock(&lock)
     }
-    transform(&_value)
+    try mutation(&_value)
   }
 }
