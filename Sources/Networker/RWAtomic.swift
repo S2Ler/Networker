@@ -17,7 +17,7 @@ public final class RWAtomic<Value> {
     pthread_rwlock_destroy(&lock)
   }
 
-  public var value: Value {
+  public var wrappedValue: Value {
     _read {
       pthread_rwlock_rdlock(&lock); defer {
         pthread_rwlock_unlock(&lock)
