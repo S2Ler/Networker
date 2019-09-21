@@ -16,7 +16,7 @@ public extension Dispatcher {
   func dispatch<Success, Decoder>(_ request: Request<Success, Decoder>) -> AnyPublisher<Success, Decoder.ErrorType>
     where Success: Decodable, Decoder: ResponseDecoder {
       typealias RequestFuture = Future<Success, Decoder.ErrorType>
-      return Publishers.Deferred<RequestFuture> {
+      return Deferred<RequestFuture> {
         return RequestFuture { (fulfill) in
           var transportRequest = self.prepareUrlRequest(request)
 

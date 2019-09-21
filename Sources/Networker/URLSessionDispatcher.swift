@@ -33,7 +33,7 @@ public class URLSessionDispatcher: NSObject {
 
 extension URLSessionDispatcher: Dispatcher {
   public func add(_ plugin: DispatcherPlugin) {
-    $plugins.mutate { $0.append(plugin) }
+    _plugins.mutate { $0.append(plugin) }
   }
 
   public func prepareUrlRequest<Success, Decoder>(_ request: Request<Success, Decoder>) -> URLRequest {

@@ -7,7 +7,7 @@ public final class RWAtomic<Value> {
   private var lock: pthread_rwlock_t
   private var _value: Value
 
-  public init(initialValue: Value) {
+  public init(wrappedValue initialValue: Value) {
     _value = initialValue
     lock = pthread_rwlock_t()
     pthread_rwlock_init(&lock, nil)
