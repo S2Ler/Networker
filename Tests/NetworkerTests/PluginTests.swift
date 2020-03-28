@@ -27,6 +27,34 @@ class PluginTests: XCTestCase {
         finished.fulfill()
       }, receiveValue: {_ in })
 
+    waitForExpectations(timeout: 0.5, handler: nil)
+  }
+
+  func testInjectHeaderPlugingDynamic() {
+    let headerName = "API_VERSION"
+    let headerValue: () -> String = { "1.0" }
+
+    let dispatcher = MockDispatcher(finalRequestHandler: { urlRequest in
+      XCTAssertEqual(urlRequest.value(forHTTPHeaderField: headerName), headerValue())
+    })
+
+    dispatcher.add(InjectHeaderPlugin(headerField: headerName, dynamicValue: headerValue))
+
+    let finished = expectation(description: "Finished")
+
+    let _ = dispatcher
+      .dispatch(Request<String, EmptyDecoder>(baseUrl: .anyUrl,
+                                              path: "/api",
+                                              urlParams: nil,
+                                              httpMethod: .get,
+                                              body: nil,
+                                              headers: nil,
+                                              timeout: 60,
+                                              cachePolicy: .useProtocolCachePolicy))
+      .sink(receiveCompletion: { (completion) in
+        finished.fulfill()
+      }, receiveValue: {_ in })
+
     waitForExpectations(timeout: 0.1, handler: nil)
   }
 }

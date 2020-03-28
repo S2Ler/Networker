@@ -9,20 +9,22 @@ internal final class MockDispatcher: Dispatcher {
 
   internal init(finalRequestHandler: @escaping (URLRequest) -> Void) {
     self.finalRequestHandler = finalRequestHandler
-    urlSessionDispatcher = URLSessionDispatcher(plugins: [])
+    urlSessionDispatcher = URLSessionDispatcher(jsonBodyEncoder: JSONEncoder(), plugins: [])
     plugins = []
   }
 
-  func prepareUrlRequest<Success, Decoder>(_ request: Request<Success, Decoder>) -> URLRequest {
-    return urlSessionDispatcher.prepareUrlRequest(request)
+  func prepareUrlRequest<Success, Decoder>(_ request: Request<Success, Decoder>) throws -> URLRequest {
+    return try urlSessionDispatcher.prepareUrlRequest(request)
   }
 
-  func sendTransportRequest<Success, Decoder>(_ request: URLRequest,
-                                              requestType: Request<Success, Decoder>.Type,
-                                              completionQueue: DispatchQueue,
-                                              completion: @escaping (Result<Success, Decoder.ErrorType>) -> Void) {
-    finalRequestHandler(request)
-    completionQueue.async { completion(requestType.convert(data: nil, response: nil, error: nil)) }
+  func sendTransportRequest<Success, Decoder>(
+    _ urlRequest: URLRequest,
+    requestType: Request<Success, Decoder>.Type,
+    completionQueue: DispatchQueue,
+    completion: @escaping (Result<Success, Error>) -> Void
+  ) where Success : Decodable, Decoder : ResponseDecoder {
+    finalRequestHandler(urlRequest)
+    completionQueue.async { completion(requestType.convert(data: nil, response: nil, error: nil).mapError{$0}) }
   }
 
   func add(_ plugin: DispatcherPlugin) {

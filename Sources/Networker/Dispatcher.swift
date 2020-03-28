@@ -5,20 +5,29 @@ public protocol Dispatcher: AnyObject {
   var plugins: [DispatcherPlugin] { get set }
   func add(_ plugin: DispatcherPlugin)
 
-  func prepareUrlRequest<Success, Decoder>(_ request: Request<Success, Decoder>) -> URLRequest
-  func sendTransportRequest<Success, Decoder>(_ urlRequest: URLRequest,
-                                              requestType: Request<Success, Decoder>.Type,
-                                              completionQueue: DispatchQueue,
-                                              completion: @escaping (Result<Success, Decoder.ErrorType>) -> Void)
+  func prepareUrlRequest<Success, Decoder>(
+    _ request: Request<Success, Decoder>
+  ) throws -> URLRequest
+  
+  func sendTransportRequest<Success, Decoder>(
+    _ urlRequest: URLRequest,
+    requestType: Request<Success, Decoder>.Type,
+    completionQueue: DispatchQueue,
+    completion: @escaping (Result<Success, Swift.Error>) -> Void
+  )
 }
 
 public extension Dispatcher {
-  func dispatch<Success, Decoder>(_ request: Request<Success, Decoder>) -> AnyPublisher<Success, Decoder.ErrorType>
-    where Success: Decodable, Decoder: ResponseDecoder {
-      typealias RequestFuture = Future<Success, Decoder.ErrorType>
-      return Deferred<RequestFuture> {
-        return RequestFuture { (fulfill) in
-          var transportRequest = self.prepareUrlRequest(request)
+  func dispatch<Success, Decoder>(
+    _ request: Request<Success, Decoder>
+  ) -> AnyPublisher<Success, Swift.Error>
+    where Success: Decodable, Decoder: ResponseDecoder
+  {
+    typealias RequestFuture = Future<Success, Swift.Error>
+    return Deferred<RequestFuture> {
+      return RequestFuture { (fulfill) in
+        do {
+          var transportRequest = try self.prepareUrlRequest(request)
 
           self.plugins.forEach {
             $0.preprocessUrlRequest(&transportRequest)
@@ -33,6 +42,10 @@ public extension Dispatcher {
                                       fulfill(result)
           }
         }
-      }.eraseToAnyPublisher()
+        catch let error {
+          fulfill(.failure(error))
+        }
+      }
+    }.eraseToAnyPublisher()
   }
 }

@@ -6,6 +6,7 @@ public class URLSessionDispatcher: NSObject {
     let delegateQueue: OperationQueue?
   }
 
+  private let jsonBodyEncoder: JSONEncoder
   private var urlSessionInitData: URLSessionInitData?
   private lazy var urlSession: URLSession = {
     guard let urlSessionInitData = self.urlSessionInitData else {
@@ -22,9 +23,11 @@ public class URLSessionDispatcher: NSObject {
 
   @RWAtomic public var plugins: [DispatcherPlugin]
 
-  public init(plugins: [DispatcherPlugin],
+  public init(jsonBodyEncoder: JSONEncoder,
+              plugins: [DispatcherPlugin],
               urlSessionConfiguration: URLSessionConfiguration = .default,
               urlSessionDelegateQueue: OperationQueue? = nil) {
+    self.jsonBodyEncoder = jsonBodyEncoder
     urlSessionInitData = URLSessionInitData(urlSessionConfiguration: urlSessionConfiguration,
                                             delegateQueue: urlSessionDelegateQueue)
     self.plugins = plugins
@@ -36,21 +39,38 @@ extension URLSessionDispatcher: Dispatcher {
     _plugins.mutate { $0.append(plugin) }
   }
 
-  public func prepareUrlRequest<Success, Decoder>(_ request: Request<Success, Decoder>) -> URLRequest {
-    let urlRequest = URLRequest(url: request.url,
+  public func prepareUrlRequest<Success, Decoder>(_ request: Request<Success, Decoder>) throws -> URLRequest {
+    var urlRequest = URLRequest(url: request.url,
                                 cachePolicy: request.cachePolicy,
                                 timeoutInterval: request.timeout)
+    func httpBody() throws -> Data? {
+      switch request.body {
+      case .raw(let data):
+        return data
+      case .string(let string):
+        return Data(string.utf8)
+      case .json(let encodable):
+        return try encodable.encode(with: jsonBodyEncoder)
+      case .custom(let bodyConvertible):
+        return bodyConvertible.convertToRequestBody()
+      case .none:
+        return nil
+      }
+    }
+    urlRequest.httpBody = try httpBody()
     return urlRequest
   }
 
-  public func sendTransportRequest<Success, Decoder>(_ urlRequest: URLRequest,
-                                                     requestType: Request<Success, Decoder>.Type,
-                                                     completionQueue: DispatchQueue,
-                                                     completion: @escaping (Result<Success, Decoder.ErrorType>) -> Void) {
+  public func sendTransportRequest<Success, Decoder>(
+    _ urlRequest: URLRequest,
+    requestType: Request<Success, Decoder>.Type,
+    completionQueue: DispatchQueue,
+    completion: @escaping (Result<Success, Swift.Error>) -> Void
+  ) {
     let urlSessionTask = urlSession.dataTask(with: urlRequest) { data, response, error in
       let result = requestType.convert(data: data, response: response, error: error)
       completionQueue.async {
-        completion(result)
+        completion(result.mapError{$0})
       }
     }
 

@@ -10,3 +10,9 @@ public enum RequestBody {
 public protocol RequestBodyConvertible {
   func convertToRequestBody() -> Data
 }
+
+internal extension Encodable {
+  func encode(with encoder: JSONEncoder) throws -> Data {
+    try encoder.encode(self)
+  }
+}
