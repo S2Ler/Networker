@@ -57,7 +57,12 @@ extension URLSessionDispatcher: Dispatcher {
         return nil
       }
     }
-    urlRequest.httpBody = try httpBody()
+
+    if let body = try httpBody() {
+      urlRequest.httpBody = body
+      urlRequest.addValue("\(body.count)", forHTTPHeaderField: "Content-Length")
+    }
+    urlRequest.httpMethod = request.httpMethod.rawValue
     return urlRequest
   }
 
