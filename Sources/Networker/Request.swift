@@ -41,7 +41,6 @@ public struct Request<Success: Decodable, Decoder: ResponseDecoder> {
 }
 
 public extension Request {
-  /// - throws: URLError.badURL
   var url: URL {
     var urlComponents = path.combine(withBaseUrl: baseUrl)
 

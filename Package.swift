@@ -1,4 +1,4 @@
-// swift-tools-version:5.1
+// swift-tools-version:5.2
 
 import PackageDescription
 
@@ -14,11 +14,15 @@ let package = Package(
       targets: ["Networker"]),
   ],
   dependencies: [
+    .package(url: "https://github.com/apple/swift-log.git", from: "1.0.0")
   ],
   targets: [
     .target(
       name: "Networker",
-      dependencies: []),
+      dependencies: [
+        .product(name: "Logging", package: "swift-log")
+      ]
+    ),
     .testTarget(
       name: "NetworkerTests",
       dependencies: ["Networker"]),

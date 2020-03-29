@@ -1,7 +1,9 @@
 import Foundation
 import Combine
+import Logging
 
 public protocol Dispatcher: AnyObject {
+  var logger: Logger? { get }
   var plugins: [DispatcherPlugin] { get set }
   func add(_ plugin: DispatcherPlugin)
 
@@ -24,9 +26,11 @@ public extension Dispatcher {
     where Success: Decodable, Decoder: ResponseDecoder
   {
     typealias RequestFuture = Future<Success, Swift.Error>
-    return Deferred<RequestFuture> {
+    return Deferred<RequestFuture> { [logger] in 
       return RequestFuture { (fulfill) in
         do {
+          logger?.debug("Dispatching request: \(request)")
+          
           var transportRequest = try self.prepareUrlRequest(request)
 
           self.plugins.forEach {

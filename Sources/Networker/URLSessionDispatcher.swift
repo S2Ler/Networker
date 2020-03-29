@@ -1,4 +1,5 @@
 import Foundation
+import Logging
 
 public class URLSessionDispatcher: NSObject {
   private struct URLSessionInitData {
@@ -21,16 +22,19 @@ public class URLSessionDispatcher: NSObject {
     return urlSession
   }()
 
+  public let logger: Logger?
   @RWAtomic public var plugins: [DispatcherPlugin]
 
   public init(jsonBodyEncoder: JSONEncoder,
               plugins: [DispatcherPlugin],
               urlSessionConfiguration: URLSessionConfiguration = .default,
-              urlSessionDelegateQueue: OperationQueue? = nil) {
+              urlSessionDelegateQueue: OperationQueue? = nil,
+              logger: Logger? = nil) {
     self.jsonBodyEncoder = jsonBodyEncoder
     urlSessionInitData = URLSessionInitData(urlSessionConfiguration: urlSessionConfiguration,
                                             delegateQueue: urlSessionDelegateQueue)
     self.plugins = plugins
+    self.logger = logger
   }
 }
 
@@ -72,7 +76,24 @@ extension URLSessionDispatcher: Dispatcher {
     completionQueue: DispatchQueue,
     completion: @escaping (Result<Success, Swift.Error>) -> Void
   ) {
-    let urlSessionTask = urlSession.dataTask(with: urlRequest) { data, response, error in
+    let urlSessionTask = urlSession.dataTask(with: urlRequest) { [logger] data, response, error in
+      // Log Response
+      if let logger = logger, logger.logLevel == .debug {
+        if let response = response {
+          logger.debug("Response: \(response)")
+        }
+        if let error = error {
+          logger.debug("-- Error: \(error)")
+        }
+        if let data = data {
+          if data.count < 10000 {
+            logger.debug("-- Raw Response:\n\(String(data: data, encoding: .utf8) ?? "Not UTF8 Response")")
+          } else {
+            logger.debug("-- Partial Raw Response:\n\(String(data: data[0..<10000], encoding: .utf8) ?? "Not UTF8 Response")")
+          }
+        }
+      }
+
       let result = requestType.convert(data: data, response: response, error: error)
       completionQueue.async {
         completion(result.mapError{$0})
