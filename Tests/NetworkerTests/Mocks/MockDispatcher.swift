@@ -1,11 +1,14 @@
 import Foundation
 import Networker
 import Combine
+import Logging
 
 internal final class MockDispatcher: Dispatcher {
   private let urlSessionDispatcher: URLSessionDispatcher
   private let finalRequestHandler: (URLRequest) -> Void
+
   @RWAtomic var plugins: [DispatcherPlugin]
+  var logger: Logger? { nil }
 
   internal init(finalRequestHandler: @escaping (URLRequest) -> Void) {
     self.finalRequestHandler = finalRequestHandler
