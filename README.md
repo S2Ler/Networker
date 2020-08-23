@@ -1,3 +1,1 @@
-# Networker
-
-A description of this package.
+![Swift](https://github.com/S2Ler/Networker/workflows/Swift/badge.svg)
