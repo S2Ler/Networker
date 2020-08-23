@@ -2,6 +2,7 @@
 @testable import Networker
 import XCTest
 
+@available(OSX 10.15, *)
 class CombineDispatchTests: XCTestCase {
   func testDispatch() {
     let headerName = "API_VERSION"
