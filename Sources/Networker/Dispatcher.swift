@@ -1,5 +1,4 @@
 import Foundation
-import Combine
 import Logging
 
 public protocol Dispatcher: AnyObject {
@@ -17,39 +16,4 @@ public protocol Dispatcher: AnyObject {
     completionQueue: DispatchQueue,
     completion: @escaping (Result<Success, Swift.Error>) -> Void
   )
-}
-
-public extension Dispatcher {
-  func dispatch<Success, Decoder>(
-    _ request: Request<Success, Decoder>
-  ) -> AnyPublisher<Success, Swift.Error>
-    where Success: Decodable, Decoder: ResponseDecoder
-  {
-    typealias RequestFuture = Future<Success, Swift.Error>
-    return Deferred<RequestFuture> { [logger] in 
-      return RequestFuture { (fulfill) in
-        do {
-          logger?.debug("Dispatching request: \(request)")
-          
-          var transportRequest = try self.prepareUrlRequest(request)
-
-          self.plugins.forEach {
-            $0.preprocessUrlRequest(&transportRequest)
-          }
-
-          self.sendTransportRequest(transportRequest,
-                                    requestType: type(of: request),
-                                    completionQueue: .global()) { [weak self] result in
-                                      self?.plugins.forEach {
-                                        $0.didSendRequest(transportRequest, result: result)
-                                      }
-                                      fulfill(result)
-          }
-        }
-        catch let error {
-          fulfill(.failure(error))
-        }
-      }
-    }.eraseToAnyPublisher()
-  }
 }

@@ -14,7 +14,6 @@ public class URLSessionDispatcher: NSObject {
       preconditionFailure()
     }
 
-    let operationQueue = OperationQueue()
     let urlSession = URLSession(configuration: urlSessionInitData.urlSessionConfiguration,
                                 delegate: self,
                                 delegateQueue: urlSessionInitData.delegateQueue)

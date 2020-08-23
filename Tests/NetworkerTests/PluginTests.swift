@@ -13,21 +13,19 @@ class PluginTests: XCTestCase {
     dispatcher.add(InjectHeaderPlugin(headerField: headerName, value: headerValue))
 
     let finished = expectation(description: "Finished")
+    let request = Request<String, EmptyDecoder>(baseUrl: .anyUrl,
+                                                path: "/api",
+                                                urlParams: nil,
+                                                httpMethod: .get,
+                                                body: nil,
+                                                headers: nil,
+                                                timeout: 60,
+                                                cachePolicy: .useProtocolCachePolicy)
+    dispatcher.dispatch(request, completionQueue: .global()) { (result) in
+      finished.fulfill()
+    }
 
-    let _ = dispatcher
-      .dispatch(Request<String, EmptyDecoder>(baseUrl: .anyUrl,
-                                              path: "/api",
-                                              urlParams: nil,
-                                              httpMethod: .get,
-                                              body: nil,
-                                              headers: nil,
-                                              timeout: 60,
-                                              cachePolicy: .useProtocolCachePolicy))
-      .sink(receiveCompletion: { (completion) in
-        finished.fulfill()
-      }, receiveValue: {_ in })
-
-    waitForExpectations(timeout: 0.5, handler: nil)
+    waitForExpectations(timeout: 0.1, handler: nil)
   }
 
   func testInjectHeaderPlugingDynamic() {
@@ -41,19 +39,18 @@ class PluginTests: XCTestCase {
     dispatcher.add(InjectHeaderPlugin(headerField: headerName, dynamicValue: headerValue))
 
     let finished = expectation(description: "Finished")
+    let request = Request<String, EmptyDecoder>(baseUrl: .anyUrl,
+                                                path: "/api",
+                                                urlParams: nil,
+                                                httpMethod: .get,
+                                                body: nil,
+                                                headers: nil,
+                                                timeout: 60,
+                                                cachePolicy: .useProtocolCachePolicy)
 
-    let _ = dispatcher
-      .dispatch(Request<String, EmptyDecoder>(baseUrl: .anyUrl,
-                                              path: "/api",
-                                              urlParams: nil,
-                                              httpMethod: .get,
-                                              body: nil,
-                                              headers: nil,
-                                              timeout: 60,
-                                              cachePolicy: .useProtocolCachePolicy))
-      .sink(receiveCompletion: { (completion) in
-        finished.fulfill()
-      }, receiveValue: {_ in })
+    dispatcher.dispatch(request, completionQueue: .global()) { (_) in
+      finished.fulfill()
+    }
 
     waitForExpectations(timeout: 0.1, handler: nil)
   }
