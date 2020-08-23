@@ -1,3 +1,4 @@
+#if canImport(Combine)
 @testable import Networker
 import XCTest
 
@@ -31,3 +32,4 @@ class CombineDispatchTests: XCTestCase {
     }
   }
 }
+#endif
