@@ -66,6 +66,7 @@ extension URLSessionDispatcher: Dispatcher {
       urlRequest.addValue("\(body.count)", forHTTPHeaderField: "Content-Length")
     }
     urlRequest.httpMethod = request.httpMethod.rawValue
+    logger?.debug("Prepared URLRequest: \(urlRequest)")
     return urlRequest
   }
 
