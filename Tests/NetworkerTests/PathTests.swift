@@ -25,6 +25,13 @@ class PathTests: XCTestCase {
   func testThrowingPatternWithoutLeadingSlash() {
     testThrowing("api/bot/{id}", parameters: ["id": "123"], expectedError: RequestPath.Error.patternWithoutLeadingSlash)
   }
+
+  func testAppend() throws {
+    let p1 = RequestPath(pattern: "/api/bot/{id}", parameters: ["id": "1"])
+    let p2 = RequestPath(pattern: "/value/{v}", parameters: ["v": "2"])
+    let resultPath = try p1.appendingPathComponent(p2)
+    XCTAssertEqual(resultPath.raw, "/api/bot/1/value/2")
+  }
 }
 
 extension PathTests {

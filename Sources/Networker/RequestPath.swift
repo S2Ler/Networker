@@ -32,6 +32,7 @@ public struct RequestPath {
   }
 
   /// Same as the variant with StaticString pattern buy throws instead of crashing.
+  /// - throws: RequestPath.Error
   public init(dynamicPattern: String, parameters: Parameters? = nil) throws {
     try RequestPath.validateInputs(pattern: dynamicPattern, parameters: parameters)
 
@@ -39,6 +40,7 @@ public struct RequestPath {
     self.parameters = parameters
   }
 
+  /// - throws: RequestPath.Error
   private static func validateInputs(pattern: String, parameters: Parameters?) throws {
     assert(!Constants.sampleBaseUrlComponents.path.hasSuffix("/"))
 
@@ -112,6 +114,37 @@ public struct RequestPath {
     else {
       return pattern
     }
+  }
+
+  /// Appends `pathComponent` to this `RequestPath`.
+  /// Two `RequestPath`s shouldn't have common parameter keys.
+  /// - throws: RequestPath.Error
+  public func appendingPathComponent(_ pathComponent: RequestPath) throws -> RequestPath {
+    var pattern = self.pattern
+    if pattern.hasSuffix("/") {
+      pattern.removeLast()
+    }
+    pattern.append(pathComponent.pattern)
+
+
+    let parameters: Parameters?
+
+    switch (self.parameters, pathComponent.parameters) {
+    case (.none, .none):
+      parameters = nil
+    case (.some(let p1), .none):
+      parameters = p1
+    case (.none, .some(let p2)):
+      parameters = p2
+    case (.some(var p1), .some(let p2)):
+      precondition(Set(p1.keys).intersection(Set(p2.keys)).count == 0, "Merged path components have the same key/s")
+      for (key, value)in p2 {
+        p1[key] = value
+      }
+      parameters = p1
+    }
+
+    return try RequestPath(dynamicPattern: pattern, parameters: parameters)
   }
 }
 
