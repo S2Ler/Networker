@@ -66,6 +66,11 @@ extension URLSessionDispatcher: Dispatcher {
       urlRequest.addValue("\(body.count)", forHTTPHeaderField: "Content-Length")
     }
     urlRequest.httpMethod = request.httpMethod.rawValue
+    if let headers = request.headers {
+      for (key, value) in headers {
+        urlRequest.setValue(value.rawRequestValue, forHTTPHeaderField: key)
+      }
+    }
     logger?.debug("Prepared URLRequest: \(urlRequest)")
     return urlRequest
   }
