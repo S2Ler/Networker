@@ -1,4 +1,7 @@
 import Foundation
+#if os(Linux)
+import FoundationNetworking
+#endif
 
 public protocol DispatcherPlugin {
   func preprocessUrlRequest(_ urlRequest: inout URLRequest)

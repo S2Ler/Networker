@@ -1,4 +1,7 @@
 import Foundation
+#if os(Linux)
+import FoundationNetworking
+#endif
 
 public protocol ResponseDecoder {
   associatedtype ErrorType: Swift.Error

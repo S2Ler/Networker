@@ -1,5 +1,8 @@
 import Foundation
 import Logging
+#if os(Linux)
+import FoundationNetworking
+#endif
 
 public class URLSessionDispatcher: NSObject {
   private struct URLSessionInitData {
