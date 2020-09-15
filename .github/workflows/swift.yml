@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  macOS Latest:
+  macOS_Latest:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v2
