@@ -1,7 +1,4 @@
 import Foundation
-#if os(Linux)
-import FoundationNetworking
-#endif
 
 public final class InjectHeaderPlugin: DispatcherPlugin {
   private let headerField: String

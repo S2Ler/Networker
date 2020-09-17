@@ -1,8 +1,5 @@
 import Foundation
 import Logging
-#if os(Linux)
-import FoundationNetworking
-#endif
 
 public protocol Dispatcher: AnyObject {
   var logger: Logger? { get }

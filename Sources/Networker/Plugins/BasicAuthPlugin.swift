@@ -1,7 +1,4 @@
 import Foundation
-#if os(Linux)
-import FoundationNetworking
-#endif
 
 public final class BasicAuthPlugin: DispatcherPlugin {
   private let username: String
