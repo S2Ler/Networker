@@ -3,55 +3,67 @@ import XCTest
 
 class PluginTests: XCTestCase {
   func testInjectHeaderPlugin() {
-    let headerName = "API_VERSION"
-    let headerValue = "1.0"
+    let finalRequestHandlerCalled = expectation(description: "finalRequestHandler")
 
-    let dispatcher = MockDispatcher(finalRequestHandler: { urlRequest in
-      XCTAssertEqual(urlRequest.value(forHTTPHeaderField: headerName), headerValue)
-    })
+    runAsyncAndBlock {
+      let headerName = "API_VERSION"
+      let headerValue = "1.0"
 
-    dispatcher.add(InjectHeaderPlugin(headerField: headerName, value: headerValue))
+      let dispatcher = MockDispatcher(finalRequestHandler: { urlRequest in
+        XCTAssertEqual(urlRequest.value(forHTTPHeaderField: headerName), headerValue)
+        finalRequestHandlerCalled.fulfill()
+      })
 
-    let finished = expectation(description: "Finished")
-    let request = Request<String, EmptyDecoder>(baseUrl: .anyUrl,
-                                                path: "/api",
-                                                urlParams: nil,
-                                                httpMethod: .get,
-                                                body: nil,
-                                                headers: nil,
-                                                timeout: 60,
-                                                cachePolicy: .useProtocolCachePolicy)
-    dispatcher.dispatch(request, completionQueue: .global()) { (result) in
-      finished.fulfill()
+      dispatcher.add(InjectHeaderPlugin(headerField: headerName, value: headerValue))
+
+      let request = Request<String, EmptyDecoder>(baseUrl: .anyUrl,
+                                                  path: "/api",
+                                                  urlParams: nil,
+                                                  httpMethod: .get,
+                                                  body: nil,
+                                                  headers: nil,
+                                                  timeout: 60,
+                                                  cachePolicy: .useProtocolCachePolicy)
+      do {
+        _ = await try dispatcher.dispatch(request)
+      }
+      catch {
+        // no-op
+      }
     }
-
-    waitForExpectations(timeout: 0.1, handler: nil)
+    waitForExpectations(timeout: 1, handler: nil)
   }
 
   func testInjectHeaderPlugingDynamic() {
-    let headerName = "API_VERSION"
-    let headerValue: () -> String = { "1.0" }
+    let finalRequestHandlerCalled = expectation(description: "finalRequestHandler")
 
-    let dispatcher = MockDispatcher(finalRequestHandler: { urlRequest in
-      XCTAssertEqual(urlRequest.value(forHTTPHeaderField: headerName), headerValue())
-    })
+    runAsyncAndBlock {
+      let headerName = "API_VERSION"
+      let headerValue: () -> String = { "1.0" }
 
-    dispatcher.add(InjectHeaderPlugin(headerField: headerName, dynamicValue: headerValue))
+      let dispatcher = MockDispatcher(finalRequestHandler: { urlRequest in
+        XCTAssertEqual(urlRequest.value(forHTTPHeaderField: headerName), headerValue())
+        finalRequestHandlerCalled.fulfill()
+      })
 
-    let finished = expectation(description: "Finished")
-    let request = Request<String, EmptyDecoder>(baseUrl: .anyUrl,
-                                                path: "/api",
-                                                urlParams: nil,
-                                                httpMethod: .get,
-                                                body: nil,
-                                                headers: nil,
-                                                timeout: 60,
-                                                cachePolicy: .useProtocolCachePolicy)
+      dispatcher.add(InjectHeaderPlugin(headerField: headerName, dynamicValue: headerValue))
 
-    dispatcher.dispatch(request, completionQueue: .global()) { (_) in
-      finished.fulfill()
+      let request = Request<String, EmptyDecoder>(baseUrl: .anyUrl,
+                                                  path: "/api",
+                                                  urlParams: nil,
+                                                  httpMethod: .get,
+                                                  body: nil,
+                                                  headers: nil,
+                                                  timeout: 60,
+                                                  cachePolicy: .useProtocolCachePolicy)
+      do {
+        _ = await try dispatcher.dispatch(request)
+      }
+      catch {
+        // no-op
+      }
     }
 
-    waitForExpectations(timeout: 0.1, handler: nil)
+    waitForExpectations(timeout: 1, handler: nil)
   }
 }

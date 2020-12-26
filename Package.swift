@@ -17,10 +17,23 @@ let package = Package(
       name: "Networker",
       dependencies: [
         .product(name: "Logging", package: "swift-log")
+      ],
+      swiftSettings: [
+        .unsafeFlags([
+          "-Xfrontend",
+          "-enable-experimental-concurrency"
+        ])
       ]
     ),
     .testTarget(
       name: "NetworkerTests",
-      dependencies: ["Networker"]),
+      dependencies: ["Networker"],
+      swiftSettings: [
+        .unsafeFlags([
+          "-Xfrontend",
+          "-enable-experimental-concurrency"
+        ])
+      ]
+    ),
   ]
 )

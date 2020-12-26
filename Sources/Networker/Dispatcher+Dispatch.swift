@@ -1,35 +1,31 @@
 import Foundation
 
 public extension Dispatcher {
-  func dispatch<Success, Decoder>(
-    _ request: Request<Success, Decoder>,
-    completionQueue: DispatchQueue,
-    completion: @escaping (Result<Success, Swift.Error>) -> Void
-  )
-    where Success: Decodable, Decoder: ResponseDecoder
+  func dispatch<Success, Decoder>(_ request: Request<Success, Decoder>) async throws -> Success
+  where
+    Success: Decodable,
+    Decoder: ResponseDecoder
   {
-    do {
-      logger?.debug("Dispatching request: \(request)")
+    logger?.debug("Dispatching request: \(request)")
 
-      var transportRequest = try self.prepareUrlRequest(request)
+    var transportRequest = try self.prepareUrlRequest(request)
 
-      self.plugins.forEach {
-        $0.preprocessUrlRequest(&transportRequest)
-      }
-
-      self.sendTransportRequest(transportRequest,
-                                requestType: type(of: request),
-                                completionQueue: completionQueue) { [weak self] result in
-        self?.plugins.forEach {
-          $0.didSendRequest(transportRequest, result: result)
-        }
-        completion(result)
-      }
+    self.plugins.forEach {
+      $0.preprocessUrlRequest(&transportRequest)
     }
-    catch let error {
-      completionQueue.async {
-        completion(.failure(error))
+
+    do {
+      let resultValue = await try self.sendTransportRequest(transportRequest, requestType: type(of: request))
+      plugins.forEach {
+        $0.didSendRequest(transportRequest, result: .success(resultValue))
       }
+      return resultValue
+    }
+    catch {
+      plugins.forEach {
+        $0.didSendRequest(transportRequest, result: Result<Success, Swift.Error>.failure(error))
+      }
+      throw error
     }
   }
 }

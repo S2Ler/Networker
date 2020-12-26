@@ -20,14 +20,19 @@ internal final class MockDispatcher: Dispatcher {
     return try urlSessionDispatcher.prepareUrlRequest(request)
   }
 
-  func sendTransportRequest<Success, Decoder>(
-    _ urlRequest: URLRequest,
-    requestType: Request<Success, Decoder>.Type,
-    completionQueue: DispatchQueue,
-    completion: @escaping (Result<Success, Error>) -> Void
-  ) where Success : Decodable, Decoder : ResponseDecoder {
+  func sendTransportRequest<Success, Decoder>
+  (_ urlRequest: URLRequest,
+   requestType: Request<Success, Decoder>.Type) async throws -> Success
+  where Success : Decodable,
+        Decoder : ResponseDecoder
+  {
     finalRequestHandler(urlRequest)
-    completionQueue.async { completion(requestType.convert(data: nil, response: nil, error: nil).mapError{$0}) }
+    switch requestType.convert(data: nil, response: nil, error: nil) {
+    case .success(let value):
+      return value
+    case .failure(let error):
+      throw error
+    }
   }
 
   func add(_ plugin: DispatcherPlugin) {

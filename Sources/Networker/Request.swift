@@ -14,13 +14,13 @@ public struct Request<Success: Decodable, Decoder: ResponseDecoder> {
   public var headers: [String: RawRequestValueConvertible]?
   public var timeout: TimeInterval = 60
   public var cachePolicy: URLRequest.CachePolicy
-
+  
   public static func convert(data: Data?,
                              response: URLResponse?,
                              error: Error?) -> Result<Success, Decoder.ErrorType> {
     return Decoder.decode(Success.self, data: data, response: response, error: error)
   }
-
+  
   public init(baseUrl: URL,
               path: RequestPath,
               urlParams: [String: RawRequestValueConvertible?]? = nil,
@@ -43,16 +43,16 @@ public struct Request<Success: Decodable, Decoder: ResponseDecoder> {
 public extension Request {
   var url: URL {
     var urlComponents = path.combine(withBaseUrl: baseUrl)
-
+    
     urlComponents.queryItems = urlParams?.map { (args) -> URLQueryItem in
       let (key, value) = args
       return URLQueryItem(name: key, value: value?.rawRequestValue)
     }
-
+    
     guard let url = urlComponents.url else {
       preconditionFailure("Can't construct url from: \(urlComponents)")
     }
-
+    
     return url
   }
 }
