@@ -1,8 +1,7 @@
 import Foundation
 
 public protocol ResponseDecoder {
-  associatedtype ErrorType: Swift.Error
-  static func decode<T: Decodable>(_ type: T.Type, data: Data?, response: URLResponse?, error: Error?) -> Result<T, ErrorType>
+  static func decode<T: Decodable>(_ type: T.Type, data: Data?, response: URLResponse?, error: Error?) -> Result<T, Error>
 }
 
 public struct Request<Success: Decodable, Decoder: ResponseDecoder> {
@@ -17,7 +16,7 @@ public struct Request<Success: Decodable, Decoder: ResponseDecoder> {
   
   public static func convert(data: Data?,
                              response: URLResponse?,
-                             error: Error?) -> Result<Success, Decoder.ErrorType> {
+                             error: Error?) -> Result<Success, Error> {
     return Decoder.decode(Success.self, data: data, response: response, error: error)
   }
   
