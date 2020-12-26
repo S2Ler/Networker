@@ -1,45 +1,68 @@
 import Foundation
 import Logging
 
-public class URLSessionDispatcher: NSObject {
-  private struct URLSessionInitData {
-    let urlSessionConfiguration: URLSessionConfiguration
-    let delegateQueue: OperationQueue?
+public final class URLSessionDispatcher {
+  private final class Delegate: NSObject, URLSessionTaskDelegate {
+    @RWAtomic var plugins: [DispatcherPlugin] = .init([])
+
+    func urlSession(_: URLSession,
+                    task _: URLSessionTask,
+                    didReceive challenge: URLAuthenticationChallenge,
+                    completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+      var challengeHandled: Bool = false
+
+      for plugin in plugins {
+        challengeHandled = plugin.fullFill(challenge: challenge,
+                                           completion: completionHandler)
+        if challengeHandled {
+          break
+        }
+      }
+
+      if !challengeHandled {
+        completionHandler(.performDefaultHandling, nil)
+      }
+    }
+
+    public func add(_ plugin: DispatcherPlugin) {
+      _plugins.mutate { $0.append(plugin) }
+    }
   }
   
   private let jsonBodyEncoder: JSONEncoder
-  private var urlSessionInitData: URLSessionInitData?
-  private lazy var urlSession: URLSession = {
-    guard let urlSessionInitData = self.urlSessionInitData else {
-      preconditionFailure()
-    }
-    
-    let urlSession = URLSession(configuration: urlSessionInitData.urlSessionConfiguration,
-                                delegate: self,
-                                delegateQueue: urlSessionInitData.delegateQueue)
-    self.urlSessionInitData = nil
-    return urlSession
-  }()
+  private let urlSession: URLSession
+  private let urlSessionDelegate: Delegate
   
   public let logger: Logger?
-  @RWAtomic public var plugins: [DispatcherPlugin]
-  
+
   public init(jsonBodyEncoder: JSONEncoder,
               plugins: [DispatcherPlugin],
               urlSessionConfiguration: URLSessionConfiguration = .default,
               urlSessionDelegateQueue: OperationQueue? = nil,
               logger: Logger? = nil) {
     self.jsonBodyEncoder = jsonBodyEncoder
-    urlSessionInitData = URLSessionInitData(urlSessionConfiguration: urlSessionConfiguration,
-                                            delegateQueue: urlSessionDelegateQueue)
-    self.plugins = plugins
     self.logger = logger
+
+    let delegate = Delegate()
+    self.urlSessionDelegate = delegate
+    self.urlSession = URLSession(configuration: urlSessionConfiguration,
+                                 delegate: delegate,
+                                 delegateQueue: urlSessionDelegateQueue)
   }
 }
 
 extension URLSessionDispatcher: Dispatcher {
+  public var plugins: [DispatcherPlugin] {
+    get {
+      urlSessionDelegate.plugins
+    }
+    set {
+      urlSessionDelegate.plugins = newValue
+    }
+  }
+
   public func add(_ plugin: DispatcherPlugin) {
-    _plugins.mutate { $0.append(plugin) }
+    urlSessionDelegate.add(plugin)
   }
   
   public func prepareUrlRequest<Success, Decoder>(_ request: Request<Success, Decoder>) throws -> URLRequest {
@@ -108,27 +131,6 @@ extension URLSessionDispatcher: Dispatcher {
       }
 
       urlSessionTask.resume()
-    }
-  }
-}
-
-extension URLSessionDispatcher: URLSessionTaskDelegate {
-  public func urlSession(_: URLSession,
-                         task _: URLSessionTask,
-                         didReceive challenge: URLAuthenticationChallenge,
-                         completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
-    var challengeHandled: Bool = false
-    
-    for plugin in plugins {
-      challengeHandled = plugin.fullFill(challenge: challenge,
-                                         completion: completionHandler)
-      if challengeHandled {
-        break
-      }
-    }
-    
-    if !challengeHandled {
-      completionHandler(.performDefaultHandling, nil)
     }
   }
 }
