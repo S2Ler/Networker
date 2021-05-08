@@ -15,7 +15,7 @@ public extension Dispatcher {
     }
 
     do {
-      let resultValue = await try self.sendTransportRequest(transportRequest, requestType: type(of: request))
+      let resultValue = try await self.sendTransportRequest(transportRequest, requestType: type(of: request))
       plugins.forEach {
         $0.didSendRequest(transportRequest, result: .success(resultValue))
       }

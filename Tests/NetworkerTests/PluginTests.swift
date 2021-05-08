@@ -1,6 +1,9 @@
 @testable import Networker
 import XCTest
 
+@_silgen_name("swift_task_runAndBlockThread")
+public func runAsyncAndBlock(_ asyncFun: @escaping () async -> ())
+
 class PluginTests: XCTestCase {
   func testInjectHeaderPlugin() {
     let finalRequestHandlerCalled = expectation(description: "finalRequestHandler")
@@ -25,7 +28,7 @@ class PluginTests: XCTestCase {
                                                   timeout: 60,
                                                   cachePolicy: .useProtocolCachePolicy)
       do {
-        _ = await try dispatcher.dispatch(request)
+        _ = try await dispatcher.dispatch(request)
       }
       catch {
         // no-op
@@ -57,7 +60,7 @@ class PluginTests: XCTestCase {
                                                   timeout: 60,
                                                   cachePolicy: .useProtocolCachePolicy)
       do {
-        _ = await try dispatcher.dispatch(request)
+        _ = try await dispatcher.dispatch(request)
       }
       catch {
         // no-op

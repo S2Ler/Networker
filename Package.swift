@@ -21,7 +21,9 @@ let package = Package(
       swiftSettings: [
         .unsafeFlags([
           "-Xfrontend",
-          "-enable-experimental-concurrency"
+          "-enable-experimental-concurrency",
+          "-Xfrontend",
+          "-disable-availability-checking",
         ])
       ]
     ),
@@ -31,7 +33,9 @@ let package = Package(
       swiftSettings: [
         .unsafeFlags([
           "-Xfrontend",
-          "-enable-experimental-concurrency"
+          "-enable-experimental-concurrency",
+          "-Xfrontend",
+          "-disable-availability-checking",
         ])
       ]
     ),

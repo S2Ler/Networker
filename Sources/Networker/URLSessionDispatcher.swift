@@ -102,7 +102,7 @@ extension URLSessionDispatcher: Dispatcher {
     _ urlRequest: URLRequest,
     requestType: Request<Success, Decoder>.Type
   ) async throws -> Success {
-    await try withUnsafeThrowingContinuation { continuation in
+    try await withUnsafeThrowingContinuation { continuation in
       let urlSessionTask = urlSession.dataTask(with: urlRequest) { [logger] data, response, error in
         // Log Response
         if let logger = logger, logger.logLevel == .debug {
