@@ -1,9 +1,10 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.5
 
 import PackageDescription
 
 let package = Package(
   name: "Networker",
+  platforms: [.macOS(.v12), .iOS(.v15)],
   products: [
     .library(
       name: "Networker",
@@ -17,27 +18,12 @@ let package = Package(
       name: "Networker",
       dependencies: [
         .product(name: "Logging", package: "swift-log")
-      ],
-      swiftSettings: [
-        .unsafeFlags([
-          "-Xfrontend",
-          "-enable-experimental-concurrency",
-          "-Xfrontend",
-          "-disable-availability-checking",
-        ])
       ]
     ),
     .testTarget(
       name: "NetworkerTests",
-      dependencies: ["Networker"],
-      swiftSettings: [
-        .unsafeFlags([
-          "-Xfrontend",
-          "-enable-experimental-concurrency",
-          "-Xfrontend",
-          "-disable-availability-checking",
-        ])
-      ]
+      dependencies: ["Networker"]
     ),
   ]
+
 )

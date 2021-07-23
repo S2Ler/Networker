@@ -20,14 +20,16 @@ internal final class MockDispatcher: Dispatcher {
     return try urlSessionDispatcher.prepareUrlRequest(request)
   }
 
-  func sendTransportRequest<Success, Decoder>
-  (_ urlRequest: URLRequest,
-   requestType: Request<Success, Decoder>.Type) async throws -> Success
-  where Success : Decodable,
-        Decoder : ResponseDecoder
+  func sendTransportRequest<Success, Decoder>(
+    _ urlRequest: URLRequest,
+    requestType: Request<Success, Decoder>.Type
+  ) async throws -> Success where Success : Decodable,
+                                  Decoder : ResponseDecoder
   {
     finalRequestHandler(urlRequest)
-    switch requestType.convert(data: nil, response: nil, error: nil) {
+    switch requestType.convert(.failure(NSError(domain: URLError.errorDomain,
+                                                code: 1,
+                                                userInfo: nil))) {
     case .success(let value):
       return value
     case .failure(let error):

@@ -102,35 +102,32 @@ extension URLSessionDispatcher: Dispatcher {
     _ urlRequest: URLRequest,
     requestType: Request<Success, Decoder>.Type
   ) async throws -> Success {
-    try await withUnsafeThrowingContinuation { continuation in
-      let urlSessionTask = urlSession.dataTask(with: urlRequest) { [logger] data, response, error in
-        // Log Response
-        if let logger = logger, logger.logLevel == .debug {
-          if let response = response {
-            logger.debug("Response: \(response)")
-          }
-          if let error = error {
-            logger.debug("-- Error: \(error)")
-          }
-          if let data = data {
-            if data.count < 10000 {
-              logger.debug("-- Raw Response:\n\(String(data: data, encoding: .utf8) ?? "Not UTF8 Response")")
-            } else {
-              logger.debug("-- Partial Raw Response:\n\(String(data: data[0..<10000], encoding: .utf8) ?? "Not UTF8 Response")")
-            }
-          }
-        }
+    let result: Result<Success, Error>
+    do {
+      let (data, response) = try await urlSession.data(for: urlRequest)
 
-        let result = requestType.convert(data: data, response: response, error: error)
-        switch result {
-        case .success(let value):
-          continuation.resume(returning: value)
-        case .failure(let failure):
-          continuation.resume(throwing: failure)
+      // Log Response
+      if let logger = logger, logger.logLevel == .debug {
+        logger.debug("Response: \(response)")
+        if data.count < 10000 {
+          logger.debug("-- Raw Response:\n\(String(data: data, encoding: .utf8) ?? "Not UTF8 Response")")
+        } else {
+          logger.debug("-- Partial Raw Response:\n\(String(data: data[0..<10000], encoding: .utf8) ?? "Not UTF8 Response")")
         }
       }
 
-      urlSessionTask.resume()
+       result = requestType.convert(.success((data, response)))
+    }
+    catch {
+      logger?.debug("-- Error: \(error)")
+      result = requestType.convert(.failure(error))
+    }
+
+    switch result {
+    case .success(let value):
+      return value
+    case .failure(let failure):
+      throw failure
     }
   }
 }

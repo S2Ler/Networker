@@ -1,7 +1,7 @@
 import Foundation
 
 public protocol ResponseDecoder {
-  static func decode<T: Decodable>(_ type: T.Type, data: Data?, response: URLResponse?, error: Error?) -> Result<T, Error>
+  static func decode<T: Decodable>(_ type: T.Type, result: Result<(Data, URLResponse), Error>) -> Result<T, Error>
 }
 
 public struct Request<Success: Decodable, Decoder: ResponseDecoder> {
@@ -14,10 +14,8 @@ public struct Request<Success: Decodable, Decoder: ResponseDecoder> {
   public var timeout: TimeInterval = 60
   public var cachePolicy: URLRequest.CachePolicy
   
-  public static func convert(data: Data?,
-                             response: URLResponse?,
-                             error: Error?) -> Result<Success, Error> {
-    return Decoder.decode(Success.self, data: data, response: response, error: error)
+  public static func convert(_ result: Result<(Data, URLResponse), Error>) -> Result<Success, Error> {
+    return Decoder.decode(Success.self, result: result)
   }
   
   public init(baseUrl: URL,

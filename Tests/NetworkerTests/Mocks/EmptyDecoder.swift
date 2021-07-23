@@ -6,7 +6,7 @@ internal class EmptyDecoder: ResponseDecoder {
     case empty
   }
 
-  static func decode<T>(_: T.Type, data _: Data?, response _: URLResponse?, error _: Error?) -> Result<T, Error>
+  static func decode<T>(_: T.Type, result: Result<(Data, URLResponse), Error>) -> Result<T, Error>
   where T: Decodable
   {
     return .failure(EmptyError.empty)
