@@ -3,7 +3,11 @@ import Logging
 
 public final class URLSessionDispatcher {
   private final class Delegate: NSObject, URLSessionTaskDelegate {
-    @RWAtomic var plugins: [DispatcherPlugin] = .init([])
+    @RWAtomic var plugins: [DispatcherPlugin]
+
+    init(plugins: [DispatcherPlugin]) {
+      self.plugins = plugins
+    }
 
     func urlSession(_: URLSession,
                     task _: URLSessionTask,
@@ -43,7 +47,7 @@ public final class URLSessionDispatcher {
     self.jsonBodyEncoder = jsonBodyEncoder
     self.logger = logger
 
-    let delegate = Delegate()
+    let delegate = Delegate(plugins: plugins)
     self.urlSessionDelegate = delegate
     self.urlSession = URLSession(configuration: urlSessionConfiguration,
                                  delegate: delegate,
